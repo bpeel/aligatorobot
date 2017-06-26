@@ -188,11 +188,14 @@ while True:
         last_update_id = update['update_id']
         message = update['message']
 
-        detector = langdetect_factory.create()
-        detector.append(message['text'])
-        language = detector.detect()
+        try:
+            detector = langdetect_factory.create()
+            detector.append(message['text'])
+            language = detector.detect()
 
-        if language != target_language and language not in skip_languages:
-            send_reply(message, language, target_language)
+            if language != target_language and language not in skip_languages:
+                send_reply(message, language, target_language)
+        except langdetect.lang_detect_exception.LangDetectException as e:
+            pass
 
         save_last_update_id(last_update_id)
